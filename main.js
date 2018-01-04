@@ -30,7 +30,7 @@ words.appendChild(paragraph);
 
 // DOM (Document Object Model) related functions.
 
-/*
+/**
  * Populate voices drop-down.
  */
 function populateVoicesDropDown() {
@@ -40,7 +40,7 @@ function populateVoicesDropDown() {
         .join('');
 }
 
-/*
+/**
  * Set voice.
  */
 function setVoice() {
@@ -62,8 +62,9 @@ speechRecognition.lang = 'en-US';
 
 /**
  * Replace English language word with the emoji.
- * @param {string} transcript 
- * @return {string} transcript
+ * 
+ * @param {string} transcript - Transcript value.
+ * @return {string} transcript - Modified transcript value.
  */
 function replaceEnglishWordWithEmoji(transcript) {
     transcript = transcript.replace(/cat/gi, '🐈');
@@ -74,8 +75,9 @@ function replaceEnglishWordWithEmoji(transcript) {
 
 /**
  * Replace German language word with the emoji.
- * @param {string} transcript 
- * @return {string} transcript
+ * 
+ * @param {string} transcript - Transcript value.
+ * @return {string} transcript - Modified transcript value.
  */
 function replaceGermanWordWithEmoji(transcript) {
     transcript = transcript.replace(/katze/gi, '🐈');
@@ -86,7 +88,8 @@ function replaceGermanWordWithEmoji(transcript) {
 
 /**
  * Replace word with related emoji.
- * @param {string} transcript 
+ * 
+ * @param {string} transcript - Transcript value.
  */
 function replaceWordWithEmoji(transcript) {
     switch(speechRecognition.lang) {
@@ -104,7 +107,7 @@ function replaceWordWithEmoji(transcript) {
     paragraph.textContent = transcript;
 }
 
-/*
+/**
  * Write spoken words.
  */
 function writeSpokenWords(e) {
