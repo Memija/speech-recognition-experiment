@@ -79,7 +79,7 @@ function replaceEnglishWordWithEmoji(transcript) {
  * @return {string} transcript - Modified transcript value.
  */
 function replaceGermanWordWithEmoji(transcript) {
-    modifiedTranscript = transcript.replace(/katze/gi, '🐈').replace(/hund/gi, '🐕');
+    let modifiedTranscript = transcript.replace(/katze/gi, '🐈').replace(/hund/gi, '🐕');
 
     return modifiedTranscript;
 }
