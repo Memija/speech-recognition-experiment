@@ -67,10 +67,9 @@ speechRecognition.lang = 'en-US';
  * @return {string} transcript - Modified transcript value.
  */
 function replaceEnglishWordWithEmoji(transcript) {
-    transcript = transcript.replace(/cat/gi, '🐈');
-    transcript = transcript.replace(/dog/gi, '🐕');
+    let modifiedTranscript = transcript.replace(/cat/gi, '🐈').replace(/dog/gi, '🐕');
 
-    return transcript;
+    return modifiedTranscript;
 }
 
 /**
@@ -80,10 +79,9 @@ function replaceEnglishWordWithEmoji(transcript) {
  * @return {string} transcript - Modified transcript value.
  */
 function replaceGermanWordWithEmoji(transcript) {
-    transcript = transcript.replace(/katze/gi, '🐈');
-    transcript = transcript.replace(/hund/gi, '🐕');
+    modifiedTranscript = transcript.replace(/katze/gi, '🐈').replace(/hund/gi, '🐕');
 
-    return transcript;
+    return modifiedTranscript;
 }
 
 /**
@@ -92,19 +90,21 @@ function replaceGermanWordWithEmoji(transcript) {
  * @param {string} transcript - Transcript value.
  */
 function replaceWordWithEmoji(transcript) {
+    let modifiedTranscript;
+
     switch(speechRecognition.lang) {
         case 'en-US':
         case 'en-GB':
-            transcript = replaceEnglishWordWithEmoji(transcript)
+            modifiedTranscript = replaceEnglishWordWithEmoji(transcript)
             break;
         case 'de-DE':
-            transcript = replaceGermanWordWithEmoji(transcript)
+            modifiedTranscript = replaceGermanWordWithEmoji(transcript)
             break;
         default:
-            transcript = replaceEnglishWordWithEmoji(transcript)
+            modifiedTranscript = replaceEnglishWordWithEmoji(transcript)
     }
 
-    paragraph.textContent = transcript;
+    paragraph.textContent = modifiedTranscript;
 }
 
 /**
