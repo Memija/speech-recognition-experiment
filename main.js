@@ -1,14 +1,10 @@
 // Access to the Speech Recognition interface.
 window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
-
 // Instances.
 
-// Access to Speech Synthesis Utterance instance.
-const speechSynthesisUtterance = new SpeechSynthesisUtterance();
 // Access to Speech Recognition instance.
 const speechRecognition = new SpeechRecognition();
-
 
 // DOM (Document Object Model) variables.
 
@@ -18,9 +14,17 @@ const voicesDropDown = document.querySelector('[name="voice"]');
 // Spoken content.
 const words = document.getElementById('transcript');
 
-// Paragraph that contains current final spoken content.
-var paragraph = document.createElement('p');
+// Start/Stop button.
+const toggleButton = document.getElementById('toggle-listening');
 
+// Error message container.
+const errorMsg = document.getElementById('error-msg');
+
+// Paragraph that contains current final spoken content.
+let paragraph = document.createElement('p');
+
+// State variable.
+let isListening = false;
 
 // DOM (Document Object Model) variables logic.
 
@@ -34,8 +38,8 @@ words.appendChild(paragraph);
  * Populate voices drop-down.
  */
 function populateVoicesDropDown() {
-    voicesDropDown.innerHTML = speechSynthesis
-        .getVoices()
+    const voices = speechSynthesis.getVoices();
+    voicesDropDown.innerHTML = voices
         .map(voice => `<option value="${voice.name}">${voice.name}</option>`)
         .join('');
 }
@@ -44,10 +48,34 @@ function populateVoicesDropDown() {
  * Set voice.
  */
 function setVoice() {
-    speechRecognition.lang = speechSynthesis
-        .getVoices()
-        .find(voice => voice.name === this.value)
-        .lang;
+    const selectedVoice = speechSynthesis.getVoices().find(voice => voice.name === this.value);
+    if (selectedVoice) {
+        speechRecognition.lang = selectedVoice.lang;
+    }
+}
+
+/**
+ * Toggle listening state.
+ */
+function toggleListening() {
+    if (isListening) {
+        speechRecognition.stop();
+        isListening = false;
+        toggleButton.textContent = 'Start Listening';
+        toggleButton.classList.replace('btn-danger', 'btn-primary');
+    } else {
+        try {
+            speechRecognition.start();
+            isListening = true;
+            toggleButton.textContent = 'Stop Listening';
+            toggleButton.classList.replace('btn-primary', 'btn-danger');
+            errorMsg.style.display = 'none';
+        } catch (error) {
+            console.error(error);
+            errorMsg.textContent = 'Error starting recognition: ' + error.message;
+            errorMsg.style.display = 'block';
+        }
+    }
 }
 
 // Speech Recognition related variables.
@@ -112,28 +140,51 @@ function replaceWordWithEmoji(transcript) {
  */
 function writeSpokenWords(e) {
     // Transcript of the spoken content.
-    let transcript = Array.from(e.results)
+    const transcript = Array.from(e.results)
         .map(result => result[0])
         .map(result => result.transcript)
         .join('');
 
-    // If the current transcript is marked as final then write the content.
+    replaceWordWithEmoji(transcript);
+
+    // If the current transcript is marked as final then create a new paragraph.
     if (e.results[0].isFinal) {
-        replaceWordWithEmoji(transcript);
-
         paragraph = document.createElement('p');
-
         words.appendChild(paragraph);
     }
 }
 
-// Speech Recognition start.
-speechRecognition.start();
-
-
 // Event listeners.
 
 voicesDropDown.addEventListener('change', setVoice);
-speechRecognition.addEventListener('end', speechRecognition.start);
+toggleButton.addEventListener('click', toggleListening);
+
+speechRecognition.addEventListener('end', () => {
+    if (isListening) {
+        speechRecognition.start();
+    }
+});
+
 speechRecognition.addEventListener('result', writeSpokenWords);
+
+speechRecognition.addEventListener('error', (event) => {
+    console.error('Speech Recognition Error', event.error);
+    errorMsg.textContent = 'Error: ' + event.error;
+    errorMsg.style.display = 'block';
+
+    if (event.error === 'not-allowed' || event.error === 'service-not-allowed') {
+        isListening = false;
+        toggleButton.textContent = 'Start Listening';
+        toggleButton.classList.replace('btn-danger', 'btn-primary');
+    }
+});
+
 speechSynthesis.addEventListener('voiceschanged', populateVoicesDropDown);
+
+// Export for testing
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = {
+        replaceEnglishWordWithEmoji,
+        replaceGermanWordWithEmoji
+    };
+}
