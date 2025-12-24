@@ -39,9 +39,15 @@ words.appendChild(paragraph);
  */
 function populateVoicesDropDown() {
     const voices = speechSynthesis.getVoices();
-    voicesDropDown.innerHTML = voices
-        .map(voice => `<option value="${voice.name}">${voice.name}</option>`)
-        .join('');
+    while (voicesDropDown.firstChild) {
+        voicesDropDown.removeChild(voicesDropDown.firstChild);
+    }
+    voices.forEach(voice => {
+        const option = document.createElement('option');
+        option.value = voice.name;
+        option.textContent = voice.name;
+        voicesDropDown.appendChild(option);
+    });
 }
 
 /**
@@ -188,3 +194,4 @@ if (typeof module !== 'undefined' && module.exports) {
         replaceGermanWordWithEmoji
     };
 }
+// Fixed XSS
