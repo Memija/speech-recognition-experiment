@@ -66,3 +66,7 @@ p {
     #transcript p {
         margin-left: 3rem;
     }
+
+#error-msg {
+    display: none;
+}
