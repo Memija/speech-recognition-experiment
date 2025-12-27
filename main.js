@@ -26,6 +26,16 @@ let paragraph = document.createElement('p');
 // State variable.
 let isListening = false;
 
+// Constants
+const LANG_EN_US = 'en-US';
+const LANG_EN_GB = 'en-GB';
+const LANG_DE_DE = 'de-DE';
+
+const REGEX_CAT = /cat/gi;
+const REGEX_DOG = /dog/gi;
+const REGEX_KATZE = /katze/gi;
+const REGEX_HUND = /hund/gi;
+
 // DOM (Document Object Model) variables logic.
 
 // Append current final spoken content.
@@ -77,7 +87,6 @@ function toggleListening() {
             toggleButton.classList.replace('btn-primary', 'btn-danger');
             errorMsg.style.display = 'none';
         } catch (error) {
-            console.error(error);
             errorMsg.textContent = 'Error starting recognition: ' + error.message;
             errorMsg.style.display = 'block';
         }
@@ -89,7 +98,7 @@ function toggleListening() {
 // Interim results are results that are not yet final.
 speechRecognition.interimResults = true;
 // Set starting default language to American English.
-speechRecognition.lang = 'en-US';
+speechRecognition.lang = LANG_EN_US;
 
 
 // Speech Recognition functionality.
@@ -101,7 +110,7 @@ speechRecognition.lang = 'en-US';
  * @return {string} transcript - Modified transcript value.
  */
 function replaceEnglishWordWithEmoji(transcript) {
-    let modifiedTranscript = transcript.replace(/cat/gi, '🐈').replace(/dog/gi, '🐕');
+    let modifiedTranscript = transcript.replace(REGEX_CAT, '🐈').replace(REGEX_DOG, '🐕');
 
     return modifiedTranscript;
 }
@@ -113,7 +122,7 @@ function replaceEnglishWordWithEmoji(transcript) {
  * @return {string} transcript - Modified transcript value.
  */
 function replaceGermanWordWithEmoji(transcript) {
-    let modifiedTranscript = transcript.replace(/katze/gi, '🐈').replace(/hund/gi, '🐕');
+    let modifiedTranscript = transcript.replace(REGEX_KATZE, '🐈').replace(REGEX_HUND, '🐕');
 
     return modifiedTranscript;
 }
@@ -127,11 +136,11 @@ function replaceWordWithEmoji(transcript) {
     let modifiedTranscript;
 
     switch(speechRecognition.lang) {
-        case 'en-US':
-        case 'en-GB':
+        case LANG_EN_US:
+        case LANG_EN_GB:
             modifiedTranscript = replaceEnglishWordWithEmoji(transcript)
             break;
-        case 'de-DE':
+        case LANG_DE_DE:
             modifiedTranscript = replaceGermanWordWithEmoji(transcript)
             break;
         default:
@@ -174,7 +183,6 @@ speechRecognition.addEventListener('end', () => {
 speechRecognition.addEventListener('result', writeSpokenWords);
 
 speechRecognition.addEventListener('error', (event) => {
-    console.error('Speech Recognition Error', event.error);
     errorMsg.textContent = 'Error: ' + event.error;
     errorMsg.style.display = 'block';
 
@@ -194,4 +202,3 @@ if (typeof module !== 'undefined' && module.exports) {
         replaceGermanWordWithEmoji
     };
 }
-// Fixed XSS
