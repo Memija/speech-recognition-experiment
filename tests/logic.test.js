@@ -1,19 +1,17 @@
-const assert = require('assert');
+const assert = require('node:assert');
 
 // Mock browser environment
-global.window = {
+globalThis.window = {
     SpeechRecognition: class {
-        constructor() {
-            this.addEventListener = () => {};
-            this.start = () => {};
-            this.stop = () => {};
-        }
+        addEventListener() {}
+        start() {}
+        stop() {}
     },
-    webkitSpeechRecognition: class {}
+    webkitSpeechRecognition: function() {}
 };
-global.SpeechRecognition = global.window.SpeechRecognition;
-global.SpeechSynthesisUtterance = class {};
-global.document = {
+globalThis.SpeechRecognition = globalThis.window.SpeechRecognition;
+globalThis.SpeechSynthesisUtterance = function() {};
+globalThis.document = {
     querySelector: () => ({ addEventListener: () => {} }),
     getElementById: () => ({
         appendChild: () => {},
@@ -23,7 +21,7 @@ global.document = {
     }),
     createElement: () => ({ textContent: '' }),
 };
-global.speechSynthesis = {
+globalThis.speechSynthesis = {
     getVoices: () => [],
     addEventListener: () => {}
 };
