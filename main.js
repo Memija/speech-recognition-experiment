@@ -110,7 +110,7 @@ speechRecognition.lang = LANG_EN_US;
  * @return {string} transcript - Modified transcript value.
  */
 function replaceEnglishWordWithEmoji(transcript) {
-    let modifiedTranscript = transcript.replace(REGEX_CAT, '🐈').replace(REGEX_DOG, '🐕');
+    let modifiedTranscript = transcript.replaceAll(REGEX_CAT, '🐈').replaceAll(REGEX_DOG, '🐕');
 
     return modifiedTranscript;
 }
@@ -122,7 +122,7 @@ function replaceEnglishWordWithEmoji(transcript) {
  * @return {string} transcript - Modified transcript value.
  */
 function replaceGermanWordWithEmoji(transcript) {
-    let modifiedTranscript = transcript.replace(REGEX_KATZE, '🐈').replace(REGEX_HUND, '🐕');
+    let modifiedTranscript = transcript.replaceAll(REGEX_KATZE, '🐈').replaceAll(REGEX_HUND, '🐕');
 
     return modifiedTranscript;
 }
