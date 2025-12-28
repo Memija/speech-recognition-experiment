@@ -1,5 +1,5 @@
 // Access to the Speech Recognition interface.
-window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+globalThis.SpeechRecognition = globalThis.SpeechRecognition || globalThis.webkitSpeechRecognition;
 
 // Instances.
 
@@ -50,7 +50,7 @@ words.appendChild(paragraph);
 function populateVoicesDropDown() {
     const voices = speechSynthesis.getVoices();
     while (voicesDropDown.firstChild) {
-        voicesDropDown.removeChild(voicesDropDown.firstChild);
+        voicesDropDown.firstChild.remove();
     }
     voices.forEach(voice => {
         const option = document.createElement('option');
